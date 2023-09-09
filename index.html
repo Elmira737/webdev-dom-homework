@@ -59,22 +59,7 @@
     return date.toLocaleString('ru', options).replace(',', '');
   };
 
-  const comments = [
-    {
-      name: 'Глеб Фокин',
-      description: 'Это будет первый комментарий на этой странице',
-      likes: 3,
-      date: new Date('2022-02-12T12:18:00'),
-      isLiked: false
-    },
-    {
-      name: 'Варвара Н.',
-      description: 'Мне нравится как оформлена эта страница! ❤',
-      likes: 75,
-      date: new Date('2022-02-13T19:22:00'),
-      isLiked: true
-    }
-  ];
+  const comments = [];
 
   const addComment = (name, description, likes = 0, date = new Date(), isLiked = false) => {
     const comment = {
