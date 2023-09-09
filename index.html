@@ -18,6 +18,7 @@
         rows="4"></textarea>
       <div class="add-form-row">
         <button id="add-button" class="add-form-button">Написать</button>
+        <button class="delete-form-button">Удалить</button>
       </div>
     </div>
   </div>
@@ -37,6 +38,7 @@
   const commentInput = document.getElementById('text');
   const addButton = document.querySelector('.add-form-button');
   const commentsList = document.querySelector('.comments');
+  const deleteButtonElement = document.querySelector(".delete-form-button");
 
   addButton.addEventListener("click", () => {
     nameInput.classList.remove("error");
@@ -59,19 +61,26 @@
     return date.toLocaleString('ru', options).replace(',', '');
   };
 
-  const comments = [];
+  let comments = [];
 
-  const addComment = (name, description, likes = 0, date = new Date(), isLiked = false) => {
-    const comment = {
-      name,
-      description,
-      likes,
-      date,
-      isLiked
-    }
-
-    comments.push(comment);
-  }
+  const getApiData = () => {
+    return fetch('https://wedev-api.sky.pro/api/v1/elmira-kolchanova/comments', {
+      method: 'GET',
+    }).then((response) => {
+      response.json().then((responseData) => {
+        comments = responseData.comments.map((comment) => {
+          return {
+            name: comment.author.name,
+            date: new Date(),
+            text: comment.text,
+            likes: comment.likes,
+            isLiked: false,
+          };
+        });
+        renderComments(comments);
+      });
+    });
+  };
 
   const escapeHTML = (text) => {
     const entitiesMap = new Map([
@@ -87,6 +96,25 @@
     }, text);
   };
 
+  const addComment = async (name, text, likes = 0, date = new Date(), isLiked = false) => {
+    const safeNameInputValue = escapeHTML(name);
+    const safeCommentInputValue = escapeHTML(text);
+
+   fetch('https://wedev-api.sky.pro/api/v1/elmira-kolchanova/comments', {
+      method: 'POST',
+      body: JSON.stringify({
+        text: safeCommentInputValue,
+        name: safeNameInputValue,
+      }),
+    }).then((response) => {
+      response.json().then((responseData) => {
+        comments = responseData.comments;
+      });
+    });
+  };
+
+  getApiData();
+
   const toggleLikeComment = (commentName) => {
     comments.forEach((comment, i) => {
       if (comment.name === commentName) {
@@ -95,7 +123,7 @@
     });
 
     renderComments(comments);
-  }
+  };
 
   const autofillForm = (name, text) => {
     commentInput.value = `> ${text}\n${name}\n\n`;
@@ -120,7 +148,7 @@
               </div>
               <div class="comment-body">
                 <div class="comment-text">
-                  ${escapeHTML(comment.description)}
+                  ${escapeHTML(comment.text)}
                 </div>
               </div>
               <div class="comment-footer">
@@ -129,7 +157,7 @@
                   <button class="like-button ${comment.isLiked ? '-active-like' : null}"></button>
                 </div>
               </div>
-        `
+        `;
 
       commentsList.appendChild(newComment);
 
@@ -139,14 +167,22 @@
       });
 
       newComment.addEventListener('click', () => {
-        autofillForm(comment.name, comment.description);
+        autofillForm(comment.name, comment.text);
       });
     }
   };
 
   renderComments(comments);
 
+  deleteButtonElement.addEventListener('click', () => {
+  const askForDeleteComment = confirm('Вы уверены, что хотите удалить последний комментарий?');
+  if (askForDeleteComment) {
+    comments.pop();
+    renderComments(comments);
+  }
+});
+
   console.log("It works!");
 </script>
 
-</html>
+</html>   
