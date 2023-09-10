@@ -50,7 +50,6 @@
     }
 
     addComment(nameInput.value, commentInput.value);
-    renderComments(comments);
 
     nameInput.value = '';
     commentInput.value = '';
@@ -100,19 +99,24 @@
     const safeNameInputValue = escapeHTML(name);
     const safeCommentInputValue = escapeHTML(text);
 
-   fetch('https://wedev-api.sky.pro/api/v1/elmira-kolchanova/comments', {
+    fetch('https://wedev-api.sky.pro/api/v1/elmira-kolchanova/comments', {
       method: 'POST',
       body: JSON.stringify({
         text: safeCommentInputValue,
         name: safeNameInputValue,
       }),
     }).then((response) => {
-      response.json().then((responseData) => {
-        comments = responseData.comments;
-      });
+        const newComment = {
+          name: safeNameInputValue,
+          date: new Date(),
+          text: safeCommentInputValue,
+          likes: 0,
+          isLiked: false,
+        };
+        comments.push(newComment);
+        renderComments(comments);
     });
   };
-
   getApiData();
 
   const toggleLikeComment = (commentName) => {
@@ -137,11 +141,12 @@
       commentsList.innerHTML = '';
     }
 
-    for (let comment of comments) {
-      const newComment = document.createElement('li');
-      newComment.classList.add('comment');
+    if (Array.isArray(comments)) {
+      for (let comment of comments) {
+        const newComment = document.createElement('li');
+        newComment.classList.add('comment');
 
-      newComment.innerHTML = `
+        newComment.innerHTML = `
               <div class="comment-header">
                 <div>${escapeHTML(comment.name)}</div>
                 <div>${formatDate(comment.date)}</div>
@@ -159,30 +164,31 @@
               </div>
         `;
 
-      commentsList.appendChild(newComment);
+        commentsList.appendChild(newComment);
 
-      newComment.querySelector('.like-button').addEventListener('click', (e) => {
-        e.stopPropagation();
-        toggleLikeComment(comment.name);
-      });
+        newComment.querySelector('.like-button').addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleLikeComment(comment.name);
+        });
 
-      newComment.addEventListener('click', () => {
-        autofillForm(comment.name, comment.text);
-      });
+        newComment.addEventListener('click', () => {
+          autofillForm(comment.name, comment.text);
+        });
+      }
     }
   };
 
   renderComments(comments);
 
   deleteButtonElement.addEventListener('click', () => {
-  const askForDeleteComment = confirm('Вы уверены, что хотите удалить последний комментарий?');
-  if (askForDeleteComment) {
-    comments.pop();
-    renderComments(comments);
-  }
-});
+    const askForDeleteComment = confirm('Вы уверены, что хотите удалить последний комментарий?');
+    if (askForDeleteComment) {
+      comments.pop();
+      renderComments(comments);
+    }
+  });
 
   console.log("It works!");
 </script>
 
-</html>   
+</html>
