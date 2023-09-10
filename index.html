@@ -38,7 +38,7 @@
   const commentInput = document.getElementById('text');
   const addButton = document.querySelector('.add-form-button');
   const commentsList = document.querySelector('.comments');
-  const deleteButtonElement = document.querySelector(".delete-form-button");
+  const deleteButtonElement = document.querySelector('.delete-form-button');
 
   addButton.addEventListener("click", () => {
     nameInput.classList.remove("error");
@@ -154,7 +154,7 @@
               <div class="comment-footer">
                 <div class="likes">
                   <span class="likes-counter">${comment.likes}</span>
-                  <button class="like-button ${comment.isLiked ? '-active-like' : null}"></button>
+                  <button class="like-button ${comment.isLiked ? '-active-like' : ""}"></button>
                 </div>
               </div>
         `;
