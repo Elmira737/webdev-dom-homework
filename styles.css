@@ -135,3 +135,18 @@ body {
   .add-form-button:hover {
     opacity: 0.9;
   }
+
+  .delete-form-button {
+    margin-top: 24px;
+    font-size: 24px;
+    padding: 10px 20px 10px 10px;
+    background-color: #bcec30;
+    border: none;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .delete-form-button:hover {
+    opacity: 0.8;
+  }
