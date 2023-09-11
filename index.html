@@ -8,8 +8,10 @@
 </head>
 
 <body>
+  <div class="page-loader"></div>
   <div class="container">
     <ul class="comments">
+      <div class="comment-loader delete"></div>
       <!-- Список рендерится из JS -->
     </ul>
     <div class="add-form">
@@ -39,6 +41,11 @@
   const addButton = document.querySelector('.add-form-button');
   const commentsList = document.querySelector('.comments');
   const deleteButtonElement = document.querySelector('.delete-form-button');
+  const container = document.querySelector(".container");
+  const addForm = document.querySelector(".add-form");
+  const pageLoader = document.querySelector(".page-loader");
+  const commentLoader = document.querySelector(".comment-loader");
+  
 
   addButton.addEventListener("click", () => {
     nameInput.classList.remove("error");
