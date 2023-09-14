@@ -150,3 +150,45 @@ body {
   .delete-form-button:hover {
     opacity: 0.8;
   }
+
+  .page-loader {
+    font-size: 32px;
+    font-family: Helvetica;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #202020;
+    height: 100vh;
+    justify-content: center;
+    text-align: center;
+    white-space: pre-line;
+  }
+  
+  .comment-loader {
+    font-size: 24px;
+    font-family: Helvetica;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    justify-content: center;
+    text-align: center;
+    white-space: pre-line;
+    width: 596px;
+    box-sizing: border-box;
+    background: radial-gradient(
+      75.42% 75.42% at 50% 42.37%,
+      rgba(53, 53, 53, 0) 22.92%,
+      #7334ea 100%
+    );
+    filter: drop-shadow(0px 20px 67px rgba(0, 0, 0, 0.08));
+    border-radius: 20px;
+    margin-top: 48px;
+    margin-bottom: 48px;
+  }
+  
+  .delete {
+    display: none;
+  }

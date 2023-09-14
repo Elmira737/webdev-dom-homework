@@ -11,12 +11,12 @@
   <div class="page-loader"></div>
   <div class="container">
     <ul class="comments">
-      <div class="comment-loader delete"></div>
       <!-- Список рендерится из JS -->
     </ul>
+    <div class="comment-loader delete"></div>
     <div class="add-form">
       <input id="name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
-      <textarea id="text" type="textarea" class="add-form-text" placeholder="Введите ваш коментарий"
+      <textarea id="text" type="textarea" class="add-form-text" placeholder="Введите ваш комментарий"
         rows="4"></textarea>
       <div class="add-form-row">
         <button id="add-button" class="add-form-button">Написать</button>
@@ -45,7 +45,6 @@
   const addForm = document.querySelector(".add-form");
   const pageLoader = document.querySelector(".page-loader");
   const commentLoader = document.querySelector(".comment-loader");
-  
 
   addButton.addEventListener("click", () => {
     nameInput.classList.remove("error");
@@ -57,6 +56,10 @@
     }
 
     addComment(nameInput.value, commentInput.value);
+
+    addForm.classList.add('delete');
+    commentLoader.classList.remove('delete');
+    commentLoader.textContent = `Комментарий добавляется...`;
 
     nameInput.value = '';
     commentInput.value = '';
@@ -70,22 +73,30 @@
   let comments = [];
 
   const getApiData = () => {
+    container.classList.add('delete');
+    pageLoader.textContent = `Пожалуйста, подождите. Загружаю комментарии...`;
     return fetch('https://wedev-api.sky.pro/api/v1/elmira-kolchanova/comments', {
       method: 'GET',
     }).then((response) => {
-      response.json().then((responseData) => {
-        comments = responseData.comments.map((comment) => {
-          return {
-            name: comment.author.name,
-            date: new Date(),
-            text: comment.text,
-            likes: comment.likes,
-            isLiked: false,
-          };
+      return response.json()
+        .then((responseData) => {
+          comments = responseData.comments.map((comment) => {
+            return {
+              name: comment.author.name,
+              date: new Date(),
+              text: comment.text,
+              likes: comment.likes,
+              isLiked: false,
+            };
+          });
+          renderComments(comments);
         });
-        renderComments(comments);
+    })
+      .then((response) => {
+        pageLoader.textContent = "";
+        pageLoader.classList.add('delete');
+        container.classList.remove('delete');
       });
-    });
   };
 
   const escapeHTML = (text) => {
@@ -113,15 +124,18 @@
         name: safeNameInputValue,
       }),
     }).then((response) => {
-        const newComment = {
-          name: safeNameInputValue,
-          date: new Date(),
-          text: safeCommentInputValue,
-          likes: 0,
-          isLiked: false,
-        };
-        comments.push(newComment);
-        renderComments(comments);
+      const newComment = {
+        name: safeNameInputValue,
+        date: new Date(),
+        text: safeCommentInputValue,
+        likes: 0,
+        isLiked: false,
+      };
+      comments.push(newComment);
+      renderComments(comments);
+
+      commentLoader.classList.add('delete');
+      addForm.classList.remove('delete');
     });
   };
   getApiData();
