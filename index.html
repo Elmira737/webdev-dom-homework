@@ -15,9 +15,8 @@
     </ul>
     <div class="comment-loader delete"></div>
     <div class="add-form">
-      <input id="name" type="text" class="add-form-name" placeholder="Введите ваше имя" />
-      <textarea id="text" type="textarea" class="add-form-text" placeholder="Введите ваш комментарий"
-        rows="4"></textarea>
+      <input type="text" class="add-form-name" placeholder="Введите ваше имя" />
+      <textarea type="textarea" class="add-form-text" placeholder="Введите ваш комментарий" rows="4"></textarea>
       <div class="add-form-row">
         <button id="add-button" class="add-form-button">Написать</button>
         <button class="delete-form-button">Удалить</button>
@@ -36,15 +35,15 @@
 </style>
 <script>
   "use strict";
-  const nameInput = document.getElementById('name');
-  const commentInput = document.getElementById('text');
+  const nameInput = document.querySelector('.add-form-name');
+  const commentInput = document.querySelector('.add-form-text');
   const addButton = document.querySelector('.add-form-button');
   const commentsList = document.querySelector('.comments');
   const deleteButtonElement = document.querySelector('.delete-form-button');
-  const container = document.querySelector(".container");
-  const addForm = document.querySelector(".add-form");
-  const pageLoader = document.querySelector(".page-loader");
-  const commentLoader = document.querySelector(".comment-loader");
+  const container = document.querySelector('.container');
+  const addForm = document.querySelector('.add-form');
+  const pageLoader = document.querySelector('.page-loader');
+  const commentLoader = document.querySelector('.comment-loader');
 
   addButton.addEventListener("click", () => {
     nameInput.classList.remove("error");
@@ -124,15 +123,7 @@
         name: safeNameInputValue,
       }),
     }).then((response) => {
-      const newComment = {
-        name: safeNameInputValue,
-        date: new Date(),
-        text: safeCommentInputValue,
-        likes: 0,
-        isLiked: false,
-      };
-      comments.push(newComment);
-      renderComments(comments);
+      getApiData();
 
       commentLoader.classList.add('delete');
       addForm.classList.remove('delete');
