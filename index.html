@@ -121,6 +121,7 @@
       body: JSON.stringify({
         text: safeCommentInputValue,
         name: safeNameInputValue,
+        forceError: true,
       }),
     }).then((response) => {
       getApiData();
