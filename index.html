@@ -77,6 +77,9 @@
     return fetch('https://wedev-api.sky.pro/api/v1/elmira-kolchanova/comments', {
       method: 'GET',
     }).then((response) => {
+      if (response.status === 500) {
+        throw new Error('Сервер сломался, попробуй позже');
+      } 
       return response.json()
         .then((responseData) => {
           comments = responseData.comments.map((comment) => {
@@ -92,6 +95,13 @@
         });
     })
       .then((response) => {
+        pageLoader.textContent = "";
+        pageLoader.classList.add('delete');
+        container.classList.remove('delete');
+      })
+      .catch((error) => {
+        alert('Кажется, у вас сломался интернет, попробуйте позже');
+        console.warn(error);
         pageLoader.textContent = "";
         pageLoader.classList.add('delete');
         container.classList.remove('delete');
@@ -124,12 +134,34 @@
         forceError: true,
       }),
     }).then((response) => {
-      getApiData();
+      if (response.status === 500) {
+        alert('Сервер сломался, попробуй позже');
+        commentLoader.classList.add('delete');
+        addForm.classList.remove('delete');
+        nameInput.value = safeNameInputValue;
+        commentInput.value = safeCommentInputValue;
+      } else if (response.status === 400) {
+        alert('Имя и комментарий должны быть не короче 3 символов');
+        commentLoader.classList.add('delete');
+        addForm.classList.remove('delete');
+        nameInput.value = safeNameInputValue;
+        commentInput.value = safeCommentInputValue;
+      } else {
+        getApiData();
 
-      commentLoader.classList.add('delete');
-      addForm.classList.remove('delete');
-    });
-  };
+        commentLoader.classList.add('delete');
+        addForm.classList.remove('delete');
+      }
+    })
+      .catch((error) => {
+        alert('Кажется, у вас сломался интернет, попробуйте позже');
+        console.warn(error);
+        commentLoader.classList.add('delete');
+        addForm.classList.remove('delete');
+        nameInput.value = safeNameInputValue;
+        commentInput.value = safeCommentInputValue;
+      });
+  }
   getApiData();
 
   const toggleLikeComment = (commentName) => {
