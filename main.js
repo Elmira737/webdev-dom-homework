@@ -3,6 +3,8 @@ import { getComments, postComment } from "./api.js";
 import { renderComments, toggleLikeComment, autofillForm } from "./renderComments.js";
 import { formatDate, escapeHTML, showError, hideError } from "./utils.js";
 
+export const app = document.querySelector(".app");
+
 const nameInput = document.querySelector('.add-form-name');
 const commentInput = document.querySelector('.add-form-text');
 const addButton = document.querySelector('.add-form-button');
