@@ -1,3 +1,9 @@
+export let token;
+
+export const setToken = (newToken) => {
+    token = newToken;
+};
+
 export function getComments() {
     return fetch('https://wedev-api.sky.pro/api/v1/elmira-kolchanova/comments', {
         method: 'GET',
